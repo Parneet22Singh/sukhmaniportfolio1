@@ -1,0 +1,218 @@
+/* Clash Display + Satoshi (Fontshare) · Instrument Serif + JetBrains Mono kept for campaign pages */
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&f[]=satoshi@400,500,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   SUKHMANI v2 — "Midnight & Antique Gold"
+   Cinematic · editorial · art-directed
+   ============================================================ */
+
+:root {
+  --bg: #0a0a0f;
+  --bg-2: #111118;
+  --bg-3: #1a1a24;
+  --ivory: #f5f0eb;
+  --fog: #a09b94;
+  --gold: #c9a96e;
+  --gold-light: #e8d5b7;
+  --surface: rgba(255, 255, 255, 0.03);
+  --border: rgba(245, 240, 235, 0.08);
+  --grad-hero: linear-gradient(135deg, #0a0a0f 0%, #1a1a24 40%, #2d1b2e 70%, #0f1a2e 100%);
+  --grad-accent: linear-gradient(90deg, #c9a96e, #e8d5b7, #c9a96e);
+}
+
+@layer base {
+  html {
+    background-color: var(--bg);
+    scroll-behavior: auto;
+  }
+  body {
+    @apply bg-midnight text-ivory font-sans antialiased;
+    margin: 0;
+    letter-spacing: 0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  ::selection {
+    background: var(--gold);
+    color: var(--bg);
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(201, 169, 110, 0.25); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(201, 169, 110, 0.5); }
+}
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+@layer components {
+  /* Small-caps editorial label */
+  .label {
+    @apply uppercase text-[11px] font-medium text-fog;
+    letter-spacing: 0.15em;
+  }
+  .label-gold {
+    @apply uppercase text-[11px] font-medium text-gold;
+    letter-spacing: 0.15em;
+  }
+
+  /* Underline grows from center */
+  .u-link {
+    position: relative;
+  }
+  .u-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .u-link:hover::after { transform: scaleX(1); }
+
+  /* Glass surface (kept for campaign pages, re-graded to gold) */
+  .liquid-glass {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: border-color 0.4s ease, background 0.4s ease;
+  }
+  .liquid-glass::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      240px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(201, 169, 110, 0.12),
+      rgba(232, 213, 183, 0.05) 40%,
+      transparent 62%
+    );
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+  .liquid-glass:hover { border-color: rgba(201, 169, 110, 0.3); }
+  .liquid-glass:hover::after { opacity: 1; }
+  .liquid-glass-strong {
+    background: rgba(10, 10, 15, 0.78);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+}
+
+/* Gold shimmer text (campaign pages reuse .text-gradient) */
+.text-gradient {
+  background: var(--grad-accent);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 8s linear infinite;
+}
+@keyframes shimmer { to { background-position: 200% center; } }
+
+/* ---------- Fixed midnight backdrop ---------- */
+.backdrop-root {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--grad-hero);
+}
+.backdrop-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.4) 100%);
+}
+/* kept for campaign pages */
+.mesh-root {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--grad-hero);
+}
+.mesh-blob, .glow-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.35;
+  pointer-events: none;
+  will-change: transform;
+  animation: float 14s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.1); }
+  66% { transform: translate(-25px, 25px) scale(0.95); }
+}
+@keyframes badge-spin { to { transform: rotate(360deg); } }
+.badge-spin { animation: badge-spin 18s linear infinite; }
+
+/* ---------- Custom cursor: antique gold ---------- */
+.custom-cursor-active, .custom-cursor-active * { cursor: none !important; }
+.custom-cursor-active input, .custom-cursor-active textarea { cursor: text !important; }
+.cursor-dot {
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 9999px;
+  will-change: transform, width, height;
+  width: 8px; height: 8px;
+  margin: -4px 0 0 -4px;
+  background: rgba(201, 169, 110, 0.2);
+  border: 1px solid var(--gold);
+  transition: width 0.3s ease, height 0.3s ease, margin 0.3s ease, background 0.3s ease;
+}
+.cursor-dot.is-hover {
+  width: 40px; height: 40px;
+  margin: -20px 0 0 -20px;
+  background: rgba(201, 169, 110, 0.12);
+}
+
+/* ---------- Film grain (24fps steps, overlay blend) ---------- */
+.grain-overlay {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.4s steps(10) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-3%, 2%); }
+  50% { transform: translate(2%, -3%); }
+  75% { transform: translate(-2%, -2%); }
+  100% { transform: translate(3%, 3%); }
+}
+
+/* Soft diffused shadow helper */
+.shadow-soft { box-shadow: 0 40px 120px rgba(0, 0, 0, 0.45); }
+
+@media (prefers-reduced-motion: reduce) {
+  .grain-overlay, .glow-blob, .mesh-blob, .badge-spin, .text-gradient,
+  .animate-marquee, .animate-breathe, .animate-float-slow, .animate-spin-slow {
+    animation: none !important;
+  }
+}

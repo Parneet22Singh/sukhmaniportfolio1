@@ -76,7 +76,7 @@ function curtain(p: number) {
   return fill(pts, -300)
 }
 
-export default function BlobMorph({ triggerRef }: { triggerRef: React.RefObject<HTMLElement> }) {
+export default function BlobMorph({ triggerRef }: { triggerRef: React.RefObject<HTMLElement | null> }) {
   const backRef = useRef<SVGPathElement>(null)
   const frontRef = useRef<SVGPathElement>(null)
   const curtainRef = useRef<SVGPathElement>(null)

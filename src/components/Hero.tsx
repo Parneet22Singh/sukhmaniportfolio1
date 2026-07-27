@@ -1,122 +1,177 @@
-import { lazy, Suspense, useRef } from 'react'
-import { motion, useScroll, useTransform, type Variants } from 'framer-motion'
+import { useEffect, useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Magnetic from './Magnetic'
+import BlobMorph from './BlobMorph'
+import { profile } from '../data/portfolio'
 
-const VectorField = lazy(() => import('./VectorField'))
+gsap.registerPlugin(ScrollTrigger)
 
-const word: Variants = {
-  hidden: { y: 60, opacity: 0 },
-  show: (i: number) => ({
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.9, delay: 0.15 + i * 0.08, ease: [0.215, 0.61, 0.355, 1] },
-  }),
+const EASE = [0.22, 1, 0.36, 1] as const
+const NAME = 'SUKHMANI'.split('')
+
+// A floating stat card: flies in on load, idles with a gentle float.
+function FlyCard({
+  children, className = '', style, delay = 0, float = 0, started,
+}: {
+  children: React.ReactNode
+  className?: string
+  style?: React.CSSProperties
+  delay?: number
+  float?: number
+  started: boolean
+}) {
+  return (
+    <div className={`absolute ${className}`} style={style}>
+      <motion.div
+        initial={{ opacity: 0, y: 40, scale: 0.7 }}
+        animate={started ? { opacity: 1, y: 0, scale: 1 } : {}}
+        transition={{ duration: 0.9, delay: 0.6 + delay, ease: EASE }}
+      >
+        <div className="animate-float-slow" style={{ animationDelay: `${float}s`, animationDuration: `${6 + float}s` }}>
+          {children}
+        </div>
+      </motion.div>
+    </div>
+  )
 }
 
-// Asymmetric cinematic hero: headline anchored lower-left-third,
-// subtext offset right-mid, CTA bottom-left. Ambient film + gold mesh behind.
 export default function Hero({ started }: { started: boolean }) {
   const ref = useRef<HTMLElement>(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', '30% start'] })
-  const y = useTransform(scrollYProgress, [0, 1], [0, -100])
-  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0])
+  const figureRef = useRef<HTMLDivElement>(null)
+  const imgOkRef = useRef(true)
+
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, -70])
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
+
+  // GSAP: name char-reveal + figure entrance
+  useEffect(() => {
+    if (!started) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const ctx = gsap.context(() => {
+      // SUKHMANI — masked char slide-up (GSAP-site style)
+      gsap.from('.sk-char', {
+        yPercent: 118,
+        duration: 1.1,
+        ease: 'power4.out',
+        stagger: 0.055,
+        delay: 0.1,
+      })
+
+      // figure rises in
+      gsap.from(figureRef.current, { yPercent: 14, opacity: 0, duration: 1.1, ease: 'power3.out', delay: 0.25 })
+    }, ref)
+
+    return () => ctx.revert()
+  }, [started])
 
   return (
-    <section ref={ref} id="hero" className="relative h-[100svh] overflow-hidden">
-      {/* — background stack — */}
-      {/* Higgsfield: liquid gold ink blooming through midnight water */}
-      <video
-        className="absolute inset-0 w-full h-full object-cover opacity-40"
-        src="/hero-ink.mp4"
-        autoPlay muted loop playsInline
-        aria-hidden
-      />
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(10,10,15,.72) 0%, rgba(26,26,36,.55) 40%, rgba(45,27,46,.5) 70%, rgba(15,26,46,.72) 100%)' }} />
-      <div className="absolute inset-y-0 right-0 w-full md:w-3/5">
-        <Suspense fallback={null}>
-          <VectorField />
-        </Suspense>
-      </div>
-      <div className="backdrop-vignette absolute inset-0" />
+    <section ref={ref} id="hero" className="relative min-h-[100svh] overflow-hidden">
+      {/* eyebrow, top — centred across full width */}
+      <motion.p
+        style={{ opacity: contentOpacity }}
+        className="label absolute top-24 md:top-28 inset-x-0 z-40 text-center"
+        initial={{ opacity: 0, y: -10 }}
+        animate={started ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: 0.3, duration: 0.7 }}
+      >
+        Marketing Leader · India → Sydney
+      </motion.p>
 
-      {/* — content plane — */}
-      <motion.div style={{ y, opacity }} className="relative z-10 h-full">
-        {/* label, top-left */}
-        <motion.p
-          className="label absolute top-24 md:top-32 left-6 md:left-12"
-          initial={{ opacity: 0 }}
-          animate={started ? { opacity: 1 } : {}}
-          transition={{ delay: 0.1, duration: 0.8 }}
+      {/* giant name behind the figure — GSAP masked char reveal */}
+      <motion.h1
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="absolute inset-x-0 top-[17%] md:top-[19%] z-10 text-center font-display font-bold text-ivory pointer-events-none select-none px-2"
+      >
+        <span
+          className="inline-block overflow-hidden align-bottom leading-[0.9]"
+          style={{ fontSize: 'clamp(3rem, 13vw, 13rem)', letterSpacing: '-0.045em' }}
         >
-          Marketing Leader — India → Sydney
-        </motion.p>
-
-        {/* subheadline, offset right-mid */}
-        <motion.div
-          className="absolute right-6 md:right-[12%] top-[34%] max-w-[320px]"
-          initial={{ opacity: 0, y: 24 }}
-          animate={started ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.9, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <div className="w-8 h-px bg-gold mb-5" />
-          <p className="text-fog text-base md:text-lg leading-relaxed">
-            Award-winning campaigns for brands that refuse to be ordinary. Nine years. Five markets. One obsession — attention that converts.
-          </p>
-        </motion.div>
-
-        {/* headline, lower-left-third */}
-        <motion.h1
-          className="absolute left-6 md:left-12 bottom-[22%] md:bottom-[18%] font-display font-semibold text-ivory"
-          style={{ fontSize: 'clamp(3.4rem, 11vw, 11rem)', lineHeight: 0.9, letterSpacing: '-0.04em' }}
-          initial="hidden"
-          animate={started ? 'show' : 'hidden'}
-        >
-          {['Turning', 'Stories', 'into Business.'].map((w, i) => (
-            <span key={w} className="block overflow-hidden">
-              <motion.span
-                custom={i}
-                variants={word}
-                className={`block animate-breathe ${i === 1 ? 'text-gold' : ''}`}
-                style={{ animationDelay: `${i * 1.2}s` }}
-              >
-                {w}
-              </motion.span>
-            </span>
+          {NAME.map((c, i) => (
+            <span key={i} className="sk-char inline-block will-change-transform">{c}</span>
           ))}
-        </motion.h1>
+        </span>
+      </motion.h1>
 
-        {/* CTA, bottom-left */}
-        <motion.div
-          className="absolute left-6 md:left-12 bottom-[8%]"
-          initial={{ opacity: 0, y: 30 }}
-          animate={started ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 1.2, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <Magnetic>
-            <button
-              onClick={() => document.querySelector('#work')?.scrollIntoView({ behavior: 'smooth' })}
-              className="label-gold border border-gold rounded-full px-8 py-4 hover:bg-gold hover:!text-midnight transition-all duration-400"
-            >
-              Explore the Work
-            </button>
-          </Magnetic>
-        </motion.div>
+      {/* cut-out figure — bottom-anchored (standing) */}
+      <div className="absolute inset-x-0 bottom-0 z-20 flex justify-center items-end pointer-events-none">
+        <div ref={figureRef} style={{ transformOrigin: 'bottom center', marginLeft: '4%' }}>
+          <div style={{ height: 'clamp(360px, 78vh, 760px)' }} className="flex items-end justify-center">
+            <img
+              src="/portrait.png"
+              alt={`${profile.name} — ${profile.title}`}
+              className="h-full w-auto max-w-[94vw] object-contain object-bottom"
+              style={{ filter: 'grayscale(1) contrast(1.06) drop-shadow(0 30px 60px rgba(0,0,0,0.6))' }}
+              onError={(e) => {
+                if (imgOkRef.current) {
+                  imgOkRef.current = false
+                  ;(e.currentTarget as HTMLImageElement).style.display = 'none'
+                }
+              }}
+            />
+          </div>
+        </div>
+      </div>
 
-        {/* scroll cue, bottom-right */}
-        <motion.div
-          className="absolute right-6 md:right-12 bottom-[8%] hidden md:flex items-center gap-3"
-          initial={{ opacity: 0 }}
-          animate={started ? { opacity: 1 } : {}}
-          transition={{ delay: 1.6, duration: 1 }}
-        >
-          <span className="label">Scroll</span>
-          <motion.span
-            className="block w-px h-10 bg-gradient-to-b from-gold to-transparent"
-            animate={{ scaleY: [0, 1, 0], originY: [0, 0, 1] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        </motion.div>
+      {/* liquid melt — rises over the figure as the hero scrolls out */}
+      <BlobMorph triggerRef={ref} />
+
+      {/* — floating cards, hovering on the sides — */}
+      <motion.div style={{ opacity: contentOpacity, y: contentY }} className="absolute inset-0 z-30 pointer-events-none">
+        {/* 9+ years — upper-left */}
+        <FlyCard started={started} delay={0.05} float={0.8} className="left-[3%] md:left-[7%] top-[30%] pointer-events-auto">
+          <div className="liquid-glass-strong rounded-2xl px-5 py-4 text-center rotate-[-5deg]" style={{ borderTop: '3px solid var(--violet)' }}>
+            <div className="font-display font-bold text-3xl md:text-4xl text-ivory leading-none">9+</div>
+            <div className="label mt-1.5 !text-[9px]">Years leading</div>
+          </div>
+        </FlyCard>
+
+        {/* 5 markets — upper-right */}
+        <FlyCard started={started} delay={0.18} float={1.2} className="right-[3%] md:right-[8%] top-[27%] pointer-events-auto">
+          <div className="liquid-glass-strong rounded-2xl px-5 py-4 text-center rotate-[5deg]" style={{ borderTop: '3px solid var(--lavender)' }}>
+            <div className="font-display font-bold text-3xl md:text-4xl text-ivory leading-none">5</div>
+            <div className="label mt-1.5 !text-[9px]">Global markets</div>
+          </div>
+        </FlyCard>
+
+        {/* OOH thumb — lower-left */}
+        <FlyCard started={started} delay={0.28} float={0.6} className="left-[2%] md:left-[6%] bottom-[26%] hidden sm:block pointer-events-auto">
+          <div className="liquid-glass-strong rounded-2xl p-2 w-[150px] md:w-[190px] rotate-[-6deg]">
+            <div className="rounded-xl overflow-hidden aspect-[16/10]">
+              <img src="https://lalitbhardwaj.in/img/portfolio/ooh/banner_design.jpg" alt="OOH campaign" loading="lazy" className="w-full h-full object-cover" />
+            </div>
+            <p className="label mt-2 px-1 !text-[8px]">OOH · Square Yards</p>
+          </div>
+        </FlyCard>
+
+        {/* 3,00,000+ — lower-right */}
+        <FlyCard started={started} delay={0.22} float={1.0} className="right-[3%] md:right-[6%] bottom-[28%] pointer-events-auto">
+          <div className="liquid-glass-strong rounded-2xl px-5 py-4 text-center rotate-[6deg]" style={{ borderTop: '3px solid var(--coral)' }}>
+            <div className="font-display font-bold text-2xl md:text-3xl text-ivory leading-none">3,00,000+</div>
+            <div className="label mt-1.5 !text-[9px]">Interactions</div>
+          </div>
+        </FlyCard>
       </motion.div>
+
+      {/* availability pill (bottom-left) + CTA (bottom-centre) */}
+      <motion.div style={{ opacity: contentOpacity }} className="absolute left-[3%] md:left-[6%] bottom-[8%] z-40">
+        <motion.span
+          initial={{ opacity: 0, y: 20 }}
+          animate={started ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 1, duration: 0.7 }}
+          className="flex items-center gap-2 liquid-glass-strong rounded-full px-4 py-2.5 text-ivory text-xs font-medium whitespace-nowrap shadow-pop"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-70" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-gold" />
+          </span>
+          Open to opportunities · Sydney 2026
+        </motion.span>
+      </motion.div>
+
     </section>
   )
 }

@@ -1,4 +1,4 @@
-/* Clash Display + Satoshi (Fontshare) · Instrument Serif + JetBrains Mono kept for campaign pages */
+/* Clash Display + Satoshi (Fontshare) · Instrument Serif + JetBrains Mono */
 @import url('https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&f[]=satoshi@400,500,700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
@@ -7,22 +7,23 @@
 @tailwind utilities;
 
 /* ============================================================
-   SUKHMANI v2 — "Midnight & Antique Gold"
-   Cinematic · editorial · art-directed
+   SUKHMANI v3 — "Impact" · warm-dark agency (Veronix)
+   Warm near-black base · warm off-white text · vivid orange accent
    ============================================================ */
 
 :root {
-  --bg: #0a0a0f;
-  --bg-2: #111118;
-  --bg-3: #1a1a24;
-  --ivory: #f5f0eb;
-  --fog: #a09b94;
-  --gold: #c9a96e;
-  --gold-light: #e8d5b7;
-  --surface: rgba(255, 255, 255, 0.03);
-  --border: rgba(245, 240, 235, 0.08);
-  --grad-hero: linear-gradient(135deg, #0a0a0f 0%, #1a1a24 40%, #2d1b2e 70%, #0f1a2e 100%);
-  --grad-accent: linear-gradient(90deg, #c9a96e, #e8d5b7, #c9a96e);
+  --bg: #0d0b0a;
+  --bg-2: #15110e;
+  --ink: #f5f0ea;
+  --fog: #9a9088;
+  --violet: #ff5a1e; /* primary — vivid orange */
+  --lavender: #ff8a4c; /* lighter orange */
+  --mint: #12b8a6; /* teal */
+  --peach: #ff5a1e; /* orange */
+  --sky: #4c8dff; /* blue (rare) */
+  --coral: #ff3d6e; /* pink-coral */
+  --surface: rgba(255, 255, 255, 0.04);
+  --border: rgba(245, 240, 234, 0.12);
 }
 
 @layer base {
@@ -38,22 +39,17 @@
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
   }
-  ::selection {
-    background: var(--gold);
-    color: var(--bg);
-  }
+  ::selection { background: var(--violet); color: #fff; }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: rgba(201, 169, 110, 0.25); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(201, 169, 110, 0.5); }
+  ::-webkit-scrollbar-thumb { background: rgba(255, 90, 30, 0.45); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255, 90, 30, 0.75); }
 }
 
-/* Lenis */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 
 @layer components {
-  /* Small-caps editorial label */
   .label {
     @apply uppercase text-[11px] font-medium text-fog;
     letter-spacing: 0.15em;
@@ -63,156 +59,160 @@ html.lenis, html.lenis body { height: auto; }
     letter-spacing: 0.15em;
   }
 
-  /* Underline grows from center */
-  .u-link {
-    position: relative;
-  }
+  .u-link { position: relative; }
   .u-link::after {
     content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -3px;
-    height: 1px;
-    background: var(--gold);
-    transform: scaleX(0);
-    transform-origin: center;
+    position: absolute; left: 0; right: 0; bottom: -3px; height: 2px;
+    background: var(--violet);
+    transform: scaleX(0); transform-origin: center;
     transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .u-link:hover::after { transform: scaleX(1); }
 
-  /* Glass surface (kept for campaign pages, re-graded to gold) */
+  /* Frosted dark card with cursor sheen — reads on the dark bg */
   .liquid-glass {
     position: relative;
-    background: var(--surface);
+    background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--border);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    transition: border-color 0.4s ease, background 0.4s ease;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
   }
   .liquid-glass::after {
     content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: radial-gradient(
-      240px circle at var(--mx, 50%) var(--my, 50%),
-      rgba(201, 169, 110, 0.12),
-      rgba(232, 213, 183, 0.05) 40%,
-      transparent 62%
-    );
-    opacity: 0;
-    transition: opacity 0.35s ease;
-    pointer-events: none;
+    position: absolute; inset: 0; border-radius: inherit;
+    background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 90, 30, 0.22), rgba(255, 138, 76, 0.08) 40%, transparent 62%);
+    opacity: 0; transition: opacity 0.35s ease; pointer-events: none;
   }
-  .liquid-glass:hover { border-color: rgba(201, 169, 110, 0.3); }
+  .liquid-glass:hover { border-color: rgba(255, 90, 30, 0.55); box-shadow: 0 20px 60px rgba(255, 90, 30, 0.2); }
   .liquid-glass:hover::after { opacity: 1; }
   .liquid-glass-strong {
-    background: rgba(10, 10, 15, 0.78);
+    background: rgba(26, 25, 34, 0.82);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
   }
 }
 
-/* Gold shimmer text (campaign pages reuse .text-gradient) */
+/* Shimmer text (used for accent words) — orange → amber → light orange */
 .text-gradient {
-  background: var(--grad-accent);
-  background-size: 200% auto;
+  background: linear-gradient(100deg, #ff5a1e 0%, #ffb020 40%, #ff8a4c 72%, #ff5a1e 100%);
+  background-size: 220% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: shimmer 8s linear infinite;
+  animation: shimmer 9s linear infinite;
 }
-@keyframes shimmer { to { background-position: 200% center; } }
+@keyframes shimmer { to { background-position: 220% center; } }
 
-/* ---------- Fixed midnight backdrop ---------- */
+/* ---------- Fixed bright backdrop — colour comes from the route-aware
+   blobs rendered inside <Aurora/>, so this is just the solid base ---------- */
 .backdrop-root {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: var(--grad-hero);
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: var(--bg);
+  transition: background 0.6s ease;
 }
 .backdrop-vignette {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.4) 100%);
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(13, 11, 10, 0.78) 100%);
 }
-/* kept for campaign pages */
+.blob {
+  position: absolute; border-radius: 9999px; filter: blur(70px);
+  pointer-events: none; will-change: transform;
+}
+
+/* Elle-Harper-style spotlight: violet core glow → dark, with concentric rings */
+.spotlight-core {
+  position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%);
+  width: 120vh; height: 120vh; border-radius: 9999px;
+  background: radial-gradient(circle, var(--spot, rgba(255,90,30,0.5)) 0%, rgba(255,90,30,0.16) 34%, transparent 62%);
+  pointer-events: none;
+}
+.spotlight-rings {
+  position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.spotlight-rings i {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  border-radius: 9999px; border: 1px solid var(--ring, rgba(167,139,250,0.09));
+}
+
+/* mesh-root kept so campaign pages don't break; re-graded light */
 .mesh-root {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  background: var(--grad-hero);
-}
-.mesh-blob, .glow-blob {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(90px);
-  opacity: 0.35;
-  pointer-events: none;
-  will-change: transform;
-  animation: float 14s ease-in-out infinite;
-}
-@keyframes float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -40px) scale(1.1); }
-  66% { transform: translate(-25px, 25px) scale(0.95); }
+  position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  background: var(--bg);
 }
 @keyframes badge-spin { to { transform: rotate(360deg); } }
 .badge-spin { animation: badge-spin 18s linear infinite; }
 
-/* ---------- Custom cursor: antique gold ---------- */
+/* ---------- 3D helpers for the kinetic hero ---------- */
+.scene-3d { transform-style: preserve-3d; }
+.preserve-3d { transform-style: preserve-3d; }
+
+/* ---------- Custom cursor: orange ---------- */
 .custom-cursor-active, .custom-cursor-active * { cursor: none !important; }
 .custom-cursor-active input, .custom-cursor-active textarea { cursor: text !important; }
 .cursor-dot {
-  position: fixed;
-  top: 0; left: 0;
-  pointer-events: none;
-  z-index: 9999;
-  border-radius: 9999px;
-  will-change: transform, width, height;
-  width: 8px; height: 8px;
-  margin: -4px 0 0 -4px;
-  background: rgba(201, 169, 110, 0.2);
-  border: 1px solid var(--gold);
+  position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+  border-radius: 9999px; will-change: transform, width, height;
+  width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px;
+  background: rgba(255, 90, 30, 0.32);
+  border: 1.5px solid var(--violet);
   transition: width 0.3s ease, height 0.3s ease, margin 0.3s ease, background 0.3s ease;
 }
 .cursor-dot.is-hover {
-  width: 40px; height: 40px;
-  margin: -20px 0 0 -20px;
-  background: rgba(201, 169, 110, 0.12);
+  width: 44px; height: 44px; margin: -22px 0 0 -22px;
+  background: rgba(255, 90, 30, 0.16);
+  border-color: #ff5a1e;
 }
 
-/* ---------- Film grain (24fps steps, overlay blend) ---------- */
+/* ---------- Film grain: very light on bright bg ---------- */
 .grain-overlay {
-  position: fixed;
-  inset: -50%;
-  width: 200%;
-  height: 200%;
-  pointer-events: none;
-  z-index: 9998;
-  opacity: 0.04;
-  mix-blend-mode: overlay;
+  position: fixed; inset: -50%; width: 200%; height: 200%;
+  pointer-events: none; z-index: 9998; opacity: 0.05; mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: grain 0.4s steps(10) infinite;
 }
 @keyframes grain {
-  0% { transform: translate(0, 0); }
-  25% { transform: translate(-3%, 2%); }
-  50% { transform: translate(2%, -3%); }
-  75% { transform: translate(-2%, -2%); }
+  0% { transform: translate(0, 0); } 25% { transform: translate(-3%, 2%); }
+  50% { transform: translate(2%, -3%); } 75% { transform: translate(-2%, -2%); }
   100% { transform: translate(3%, 3%); }
 }
 
-/* Soft diffused shadow helper */
-.shadow-soft { box-shadow: 0 40px 120px rgba(0, 0, 0, 0.45); }
+.shadow-soft { box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5); }
+.shadow-pop { box-shadow: 0 24px 70px rgba(255, 90, 30, 0.35); }
+
+/* ---------- SocialCards fan ---------- */
+.fan-layout { position: relative; height: 22rem; }
+@media (min-width: 480px) { .fan-layout { height: 26rem; } }
+@media (min-width: 640px) { .fan-layout { height: 28rem; } }
+@media (min-width: 768px) { .fan-layout { height: 34rem; } }
+@media (min-width: 1024px) { .fan-layout { height: 38rem; } }
+/* landscape cards — sized for OOH billboards (16:10) */
+.fan-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 11rem;
+  height: 6.9rem;
+  margin-left: -5.5rem;
+  margin-top: -3.45rem;
+  border-radius: 0.7rem;
+  overflow: hidden;
+  transform-origin: center center;
+  will-change: transform;
+  background: #fff;
+  box-shadow: 0 20px 50px rgba(23, 25, 51, 0.2);
+  border: 4px solid #fff;
+}
+@media (min-width: 768px) {
+  .fan-card { width: 19rem; height: 11.9rem; margin-left: -9.5rem; margin-top: -5.95rem; }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .grain-overlay, .glow-blob, .mesh-blob, .badge-spin, .text-gradient,
-  .animate-marquee, .animate-breathe, .animate-float-slow, .animate-spin-slow {
+  .grain-overlay, .blob, .badge-spin, .text-gradient,
+  .animate-marquee, .animate-breathe, .animate-float-slow, .animate-spin-slow, .animate-blob-drift {
     animation: none !important;
   }
 }

@@ -1,6 +1,5 @@
 import { useRef, type ReactNode } from 'react'
 import { motion, useInView, useScroll, useTransform } from 'framer-motion'
-import CometField from './CometField'
 import { bio, education, profile } from '../data/portfolio'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -28,8 +27,7 @@ export default function About() {
   const lineScale = useTransform(scrollYProgress, [0.1, 0.7], [0, 1])
 
   return (
-    <section id="about" className="relative bg-charcoal overflow-hidden">
-      <CometField opacity={0.75} />
+    <section id="about" className="relative overflow-hidden">
       {/* ————— THE TENSION ————— */}
       <div ref={tensionRef} className="relative grid md:grid-cols-[55%_45%] gap-16 md:gap-0 px-6 md:px-12 py-[20vh] max-w-[1500px] mx-auto">
         {/* vertical gold line between columns */}
@@ -101,7 +99,7 @@ export default function About() {
               </div>
             </Reveal>
             <Reveal delay={0.25}>
-              <p className="mt-10 inline-flex items-center gap-3 border border-gold/30 bg-gold/5 rounded-full px-5 py-3 text-gold-light text-sm">
+              <p className="mt-10 inline-flex items-center gap-3 border border-gold/30 bg-gold/5 rounded-full px-5 py-3 text-gold text-sm font-medium">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-60" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-gold" />
@@ -122,7 +120,7 @@ export default function About() {
                     <span className="label whitespace-nowrap">{e.period}</span>
                   </div>
                   <p className="mt-1.5 text-fog text-sm">{e.institution} · {e.location}</p>
-                  {e.note && <p className="mt-2 label !text-gold-light/70">{e.note}</p>}
+                  {e.note && <p className="mt-2 label !text-gold">{e.note}</p>}
                 </div>
               </Reveal>
             ))}

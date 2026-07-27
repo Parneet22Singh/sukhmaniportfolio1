@@ -11,7 +11,7 @@ import { mediaReels } from '../data/portfolio'
    ============================================================ */
 
 const N = 420
-const GOLD = '201, 169, 110'
+const GOLD = '255, 90, 31'
 
 type P = { bx: number; by: number; t: number; stagger: number; card: number }
 
@@ -102,8 +102,8 @@ function MorphCanvas({ progress, cardRefs }: { progress: MotionValue<number>; ca
       const p = Math.min(Math.max((pSmooth - 0.28) / 0.62, 0), 1)
       ctx.clearRect(0, 0, W, H)
 
-      const cx = W / 2, cy = H * 0.42
-      const s = Math.min(W, H) * 0.52
+      const cx = W / 2, cy = H * 0.54
+      const s = Math.min(W, H) * 0.48
       const time = performance.now() * 0.001
 
       // brain-state positions (with a slow breathing wobble)
@@ -175,17 +175,17 @@ function Card({ m, i, progress, refFn }: { m: (typeof mediaReels)[number]; i: nu
           href={m.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex flex-col justify-between aspect-video md:aspect-[16/11] rounded-xl border border-gold/20 p-5 shadow-soft backdrop-blur-sm transition-colors duration-500 hover:border-gold/60"
-          style={{ background: 'linear-gradient(160deg, rgba(26,26,36,.9) 0%, rgba(45,27,46,.85) 60%, rgba(26,26,36,.9) 100%)' }}
+          className="group flex flex-col justify-between aspect-video md:aspect-[16/11] rounded-xl border border-white/60 p-5 shadow-soft backdrop-blur-sm transition-transform duration-500 hover:-translate-y-1"
+          style={{ background: 'linear-gradient(150deg, #FF5A1E 0%, #FF8A4C 55%, #FFB020 100%)' }}
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="text-gold" aria-hidden>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="text-white" aria-hidden>
             <rect x="2" y="2" width="20" height="20" rx="6" stroke="currentColor" strokeWidth="1.2" />
             <circle cx="12" cy="12" r="4.5" stroke="currentColor" strokeWidth="1.2" />
             <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" />
           </svg>
           <div>
-            <p className="font-display text-lg md:text-xl text-ivory" style={{ letterSpacing: '-0.02em' }}>{m.title}</p>
-            <p className="label-gold mt-1.5 u-link inline-block !text-[9px]">Watch Reel ↗</p>
+            <p className="font-display text-lg md:text-xl text-white" style={{ letterSpacing: '-0.02em' }}>{m.title}</p>
+            <p className="mt-1.5 u-link inline-block !text-[9px] uppercase tracking-[0.15em] font-medium text-white/90">Watch Reel ↗</p>
           </div>
         </a>
       )}
@@ -230,7 +230,7 @@ export default function Media() {
         <MorphCanvas progress={scrollYProgress} cardRefs={cardRefs} />
 
         {/* opening state: the mind */}
-        <motion.div style={{ opacity: headOpacity }} className="absolute inset-x-0 top-[12vh] text-center px-6 pointer-events-none">
+        <motion.div style={{ opacity: headOpacity }} className="absolute inset-x-0 top-[9vh] text-center px-6 pointer-events-none z-20">
           <p className="label mb-4">Media</p>
           <h2 className="font-display font-semibold text-ivory" style={{ fontSize: 'clamp(2.2rem, 4.5vw, 4.5rem)', letterSpacing: '-0.03em', lineHeight: 1 }}>
             One mind. <span className="text-gold">Many mediums.</span>
@@ -245,7 +245,7 @@ export default function Media() {
           Stories in motion — reels & showreels
         </motion.p>
 
-        <div className="absolute inset-x-0 top-[16vh] bottom-[6vh] flex items-center px-5 md:px-16">
+        <div className="absolute inset-x-0 top-[22vh] bottom-[8vh] flex items-center px-5 md:px-16">
           <div className="w-full grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 max-w-[1300px] mx-auto">
             {mediaReels.map((m, i) => (
               <Card

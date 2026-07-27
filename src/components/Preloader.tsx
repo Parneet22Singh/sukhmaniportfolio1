@@ -1,53 +1,82 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-// Load sequence: black → grain fades in globally → "S" monogram draws on
-// → wordmark fades → curtain lifts and hands off to the hero stagger.
+// Movie-style intro: a title-card quote types in, holds, then the screen
+// parts like curtains to reveal the portfolio behind it.
+const LINE = ['Turning', 'stories', 'into', 'business.']
+
 export default function Preloader({ onDone }: { onDone: () => void }) {
-  const [gone, setGone] = useState(false)
+  const [phase, setPhase] = useState<'quote' | 'part' | 'gone'>('quote')
 
   useEffect(() => {
-    const t = setTimeout(() => {
-      setGone(true)
-      // let the exit transition play before starting the hero
-      setTimeout(onDone, 500)
-    }, 2100)
-    return () => clearTimeout(t)
+    const t1 = setTimeout(() => setPhase('part'), 2300) // hold, then part curtains
+    const t2 = setTimeout(() => onDone(), 2900) // reveal hero as curtains open
+    const t3 = setTimeout(() => setPhase('gone'), 3500)
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3) }
   }, [onDone])
+
+  const curtain = { duration: 1.1, ease: [0.76, 0, 0.24, 1] as const }
 
   return (
     <AnimatePresence>
-      {!gone && (
-        <motion.div
-          className="fixed inset-0 z-[10000] bg-midnight flex flex-col items-center justify-center gap-6"
-          exit={{ y: '-100%' }}
-          transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
-        >
-          <svg width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden>
-            <motion.circle
-              cx="36" cy="36" r="33"
-              stroke="#C9A96E" strokeWidth="1" strokeDasharray="4 7"
-              initial={{ pathLength: 0, rotate: -90 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 1.4, ease: 'easeInOut' }}
-            />
-            <motion.path
-              d="M45 26c-2-3.4-6-5-9.5-5-5 0-9 3-9 7.5 0 4.2 3.3 6 8.6 7.4 5.6 1.5 9.9 3.3 9.9 8.1 0 4.9-4.4 8-9.9 8-4.2 0-8-1.8-10.1-5.4"
-              stroke="#F5F0EB" strokeWidth="2" strokeLinecap="round"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 1.1, delay: 0.35, ease: [0.65, 0, 0.35, 1] }}
-            />
-          </svg>
-          <motion.p
-            className="label"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.15, duration: 0.5 }}
+      {phase !== 'gone' && (
+        <div className="fixed inset-0 z-[10000] pointer-events-none overflow-hidden">
+          {/* left curtain */}
+          <motion.div
+            className="absolute inset-y-0 left-0 w-[50.6%] bg-midnight"
+            initial={{ x: 0 }}
+            animate={{ x: phase === 'part' ? '-100%' : 0 }}
+            transition={curtain}
+          />
+          {/* right curtain */}
+          <motion.div
+            className="absolute inset-y-0 right-0 w-[50.6%] bg-midnight"
+            initial={{ x: 0 }}
+            animate={{ x: phase === 'part' ? '100%' : 0 }}
+            transition={curtain}
+          />
+          {/* seam glow that splits with the curtains */}
+          <motion.div
+            className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px"
+            style={{ background: 'linear-gradient(to bottom, transparent, #FF5A1F, transparent)' }}
+            initial={{ opacity: 0, scaleY: 0 }}
+            animate={{
+              opacity: phase === 'part' ? 0 : 1,
+              scaleY: phase === 'part' ? 1 : 0.9,
+            }}
+            transition={{ duration: 0.6 }}
+          />
+
+          {/* title-card quote */}
+          <motion.div
+            className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-6"
+            animate={{ opacity: phase === 'part' ? 0 : 1 }}
+            transition={{ duration: 0.5 }}
           >
-            Turning stories into business
-          </motion.p>
-        </motion.div>
+            <motion.p
+              className="label !text-gold"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+            >
+              Sukhmani — Marketing Leader
+            </motion.p>
+            <h2 className="font-serif text-ivory text-center" style={{ fontSize: 'clamp(2rem, 6vw, 4.5rem)', lineHeight: 1.05 }}>
+              {LINE.map((w, i) => (
+                <span key={w} className="inline-block overflow-hidden align-bottom mr-[0.25em]">
+                  <motion.span
+                    className={`inline-block ${w === 'business.' ? 'italic text-gold' : ''}`}
+                    initial={{ y: '110%' }}
+                    animate={{ y: 0 }}
+                    transition={{ delay: 0.5 + i * 0.13, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    {w}
+                  </motion.span>
+                </span>
+              ))}
+            </h2>
+          </motion.div>
+        </div>
       )}
     </AnimatePresence>
   )

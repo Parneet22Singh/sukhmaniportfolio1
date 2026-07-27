@@ -4,7 +4,8 @@ import CampaignPage from '../components/CampaignPage'
 import YouTube from '../components/YouTube'
 import { raastaRoyal as data } from '../data/portfolio'
 
-const GOLD = '#E7C873'
+const GOLD = '#E7C873' // pale gold — decorative (sprockets, canisters, glows)
+const GOLD_INK = '#EBCE84' // bright gold — readable accent text on dark
 const ease = [0.22, 1, 0.36, 1] as const
 
 function Reveal({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
@@ -43,7 +44,7 @@ export default function RaastaRoyal() {
               </svg>
               <span className="block w-16 h-px bg-ivory/25" />
             </div>
-            <p className="label mb-6" style={{ color: GOLD }}>{data.brand} presents · A Brand Film</p>
+            <p className="label mb-6" style={{ color: GOLD_INK }}>{data.brand} presents · A Brand Film</p>
           </Reveal>
           <Reveal delay={0.1}>
             <h1 className="font-display font-semibold text-ivory" style={{ fontSize: 'clamp(3rem, 9vw, 9rem)', lineHeight: 0.95, letterSpacing: '-0.04em' }}>
@@ -62,7 +63,7 @@ export default function RaastaRoyal() {
       <section className="relative py-[8vh] px-6 md:px-12">
         <div className="max-w-[1050px] mx-auto">
           <Reveal>
-            <p className="label text-center mb-8 tracking-[0.3em]" style={{ color: GOLD }}>◆ Now Screening ◆</p>
+            <p className="label text-center mb-8 tracking-[0.3em]" style={{ color: GOLD_INK }}>◆ Now Screening ◆</p>
             <div className="rounded-xl overflow-hidden shadow-soft border border-ivory/10 bg-black">
               <Sprockets />
               <YouTube id={data.videoId} start={data.videoStart} title="Raasta bhi Royal — brand film" className="!rounded-none" />
@@ -77,7 +78,7 @@ export default function RaastaRoyal() {
         <div className="max-w-[640px] mx-auto">
           <Reveal className="text-center mb-14">
             <h2 className="font-display font-semibold text-ivory" style={{ fontSize: 'clamp(1.9rem, 3.6vw, 3.2rem)', letterSpacing: '-0.03em' }}>
-              The <span style={{ color: GOLD }}>credits.</span>
+              The <span style={{ color: GOLD_INK }}>credits.</span>
             </h2>
           </Reveal>
           {data.brief.map((b, i) => (
@@ -98,7 +99,7 @@ export default function RaastaRoyal() {
       <section className="relative py-[10vh] px-6 md:px-12">
         <div className="max-w-[1100px] mx-auto">
           <Reveal className="text-center mb-14">
-            <p className="label" style={{ color: GOLD }}>Coming Attractions</p>
+            <p className="label" style={{ color: GOLD_INK }}>Coming Attractions</p>
           </Reveal>
           <div className="grid md:grid-cols-3 gap-6">
             {data.reelSlots.map((slot, i) => (
@@ -130,7 +131,7 @@ export default function RaastaRoyal() {
                   className="group liquid-glass rounded-2xl p-7 flex items-center justify-between gap-6 transition-transform duration-500 hover:-translate-y-1"
                 >
                   <div>
-                    <span className="label" style={{ color: GOLD }}>{p.tag} · {p.outlet}</span>
+                    <span className="label" style={{ color: GOLD_INK }}>{p.tag} · {p.outlet}</span>
                     <p className="mt-2.5 text-ivory font-medium leading-snug">{p.title}</p>
                   </div>
                   <span className="text-fog group-hover:text-ivory transition-colors shrink-0 text-xl">↗</span>

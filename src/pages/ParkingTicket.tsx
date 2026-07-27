@@ -13,7 +13,7 @@ function CautionTape({ text, reverse = false }: { text: string; reverse?: boolea
     <div className={`overflow-hidden py-3 select-none ${reverse ? '-rotate-1' : 'rotate-1'}`} style={{ background: ORANGE }} aria-hidden>
       <div className="flex shrink-0 gap-10 animate-marquee whitespace-nowrap" style={reverse ? { animationDirection: 'reverse', animationDuration: '22s' } : { animationDuration: '22s' }}>
         {Array.from({ length: 14 }).map((_, i) => (
-          <span key={i} className="font-mono font-bold text-[13px] tracking-[0.3em] text-midnight uppercase">
+          <span key={i} className="font-mono font-bold text-[13px] tracking-[0.3em] text-[#231D33] uppercase">
             {text} ⚠
           </span>
         ))}
@@ -66,7 +66,7 @@ export default function ParkingTicket() {
           initial={{ opacity: 0, y: 60, rotate: -4 }}
           animate={ticketInView ? { opacity: 1, y: 0, rotate: -1.5 } : {}}
           transition={{ duration: 0.9, ease }}
-          className="relative max-w-[560px] mx-auto font-mono text-midnight rounded-sm shadow-soft"
+          className="relative max-w-[560px] mx-auto font-mono text-[#231D33] rounded-sm shadow-soft"
           style={{ background: '#F2EDE4' }}
         >
           {/* perforation */}
@@ -90,15 +90,15 @@ export default function ParkingTicket() {
               ['ISSUED BY', data.executedBy],
             ].map(([k, v]) => (
               <div key={k} className="flex justify-between gap-6 items-baseline border-b border-midnight/15 py-3.5 text-[13px]">
-                <span className="text-midnight/50 tracking-[0.2em] shrink-0">{k}</span>
+                <span className="text-[#231D33]/50 tracking-[0.2em] shrink-0">{k}</span>
                 <span className="text-right font-medium">{v}</span>
               </div>
             ))}
 
             <div className="pt-5">
-              <span className="text-midnight/50 tracking-[0.2em] text-[11px]">AMOUNT DUE</span>
+              <span className="text-[#231D33]/50 tracking-[0.2em] text-[11px]">AMOUNT DUE</span>
               <p className="text-4xl font-bold mt-1">Priceless</p>
-              <p className="text-midnight/60 text-[11px] mt-1.5">…so find a space that's yours. squareyards.com</p>
+              <p className="text-[#231D33]/60 text-[11px] mt-1.5">…so find a space that's yours. squareyards.com</p>
             </div>
           </div>
 

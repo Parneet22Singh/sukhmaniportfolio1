@@ -2,7 +2,11 @@ import { StrictMode, Suspense, lazy, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Lenis from 'lenis'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import './index.css'
+
+gsap.registerPlugin(ScrollTrigger)
 import ScrollToTop from './components/ScrollToTop'
 import CustomCursor from './components/CustomCursor'
 import Atmosphere from './components/Atmosphere'
@@ -19,14 +23,13 @@ function SmoothScroll() {
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const lenis = new Lenis({ lerp: 0.1 })
-    let raf = 0
-    const loop = (t: number) => {
-      lenis.raf(t)
-      raf = requestAnimationFrame(loop)
-    }
-    raf = requestAnimationFrame(loop)
+    // drive Lenis from GSAP's ticker and keep ScrollTrigger in sync
+    lenis.on('scroll', ScrollTrigger.update)
+    const raf = (time: number) => lenis.raf(time * 1000)
+    gsap.ticker.add(raf)
+    gsap.ticker.lagSmoothing(0)
     return () => {
-      cancelAnimationFrame(raf)
+      gsap.ticker.remove(raf)
       lenis.destroy()
     }
   }, [])

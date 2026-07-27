@@ -11,7 +11,7 @@ export default function Contact() {
     <section
       id="contact"
       className="relative pt-[18vh] pb-12 px-6 md:px-12 overflow-hidden"
-      style={{ background: 'radial-gradient(ellipse at center, #1A1A24 0%, #0A0A0F 70%)' }}
+      style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 40%, rgba(255,90,31,.28) 0%, rgba(255,176,32,.12) 45%, transparent 75%), #0E0D12' }}
     >
       <div ref={ref} className="max-w-[1500px] mx-auto text-center">
         <motion.p
@@ -43,7 +43,7 @@ export default function Contact() {
           <Magnetic className="mt-14">
             <a
               href={`mailto:${profile.email}`}
-              className="u-link font-display text-xl md:text-3xl text-gold-light break-all"
+              className="u-link font-display text-xl md:text-3xl text-gold break-all"
               style={{ letterSpacing: '-0.01em' }}
             >
               {profile.email}

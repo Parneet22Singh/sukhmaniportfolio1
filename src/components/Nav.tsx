@@ -53,6 +53,12 @@ export default function Nav() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
+  // Dropdown open/close with a small close delay so moving the cursor
+  // from the trigger to the menu never snaps it shut.
+  const dropTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const openDrop = () => { if (dropTimer.current) clearTimeout(dropTimer.current); setDrop(true) }
+  const closeDrop = () => { dropTimer.current = setTimeout(() => setDrop(false), 160) }
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -92,8 +98,8 @@ export default function Nav() {
               </button>
             ))}
             {/* Campaigns dropdown */}
-            <div className="relative" onMouseLeave={() => setDrop(false)}>
-              <button onMouseEnter={() => setDrop(true)} onClick={() => setDrop(!drop)} className="label u-link !text-ivory/60 hover:!text-ivory transition-colors">
+            <div className="relative" onMouseEnter={openDrop} onMouseLeave={closeDrop}>
+              <button onClick={() => setDrop((v) => !v)} className="label u-link !text-ivory/60 hover:!text-ivory transition-colors">
                 <Scramble text="CAMPAIGNS" /> <span className="text-gold">↓</span>
               </button>
               <AnimatePresence>
@@ -103,22 +109,26 @@ export default function Nav() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 6 }}
                     transition={{ duration: 0.25 }}
-                    className="absolute top-full right-0 mt-4 w-72 liquid-glass-strong border border-ivory/10 rounded-xl p-2 shadow-soft"
+                    /* pt-4 is a hover *bridge*: it belongs to this element (a
+                       child of the wrapper), so crossing it never fires mouseleave */
+                    className="absolute top-full right-0 pt-4 w-72"
                   >
-                    {campaignIndex.map((c) => (
-                      <Link
-                        key={c.slug}
-                        to={`/${c.slug}`}
-                        onClick={() => setDrop(false)}
-                        className="group flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gold/5 transition-colors"
-                      >
-                        <span>
-                          <span className="block text-sm text-ivory group-hover:text-gold transition-colors">{c.title}</span>
-                          <span className="label !text-[9px]">{c.kicker}</span>
-                        </span>
-                        <span className="text-fog group-hover:text-gold transition-colors">→</span>
-                      </Link>
-                    ))}
+                    <div className="liquid-glass-strong border border-ivory/10 rounded-xl p-2 shadow-soft">
+                      {campaignIndex.map((c) => (
+                        <Link
+                          key={c.slug}
+                          to={`/${c.slug}`}
+                          onClick={() => setDrop(false)}
+                          className="group flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gold/5 transition-colors"
+                        >
+                          <span>
+                            <span className="block text-sm text-ivory group-hover:text-gold transition-colors">{c.title}</span>
+                            <span className="label !text-[9px]">{c.kicker}</span>
+                          </span>
+                          <span className="text-fog group-hover:text-gold transition-colors">→</span>
+                        </Link>
+                      ))}
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>

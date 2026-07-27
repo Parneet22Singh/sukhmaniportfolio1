@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
-import CometField from './CometField'
 import { experience } from '../data/portfolio'
 
 // Editorial career index: hairline rows, oversized indices, expand-on-click.
@@ -10,8 +9,7 @@ export default function Experience() {
   const [open, setOpen] = useState(0)
 
   return (
-    <section id="experience" className="relative bg-charcoal py-[16vh] px-6 md:px-12 overflow-hidden">
-      <CometField opacity={0.7} />
+    <section id="experience" className="relative py-[16vh] px-6 md:px-12 overflow-hidden">
       <div ref={ref} className="relative max-w-[1500px] mx-auto">
         <motion.p
           className="label mb-4"
@@ -47,7 +45,7 @@ export default function Experience() {
               >
                 <span className="font-display text-fog/50 text-sm md:text-base tabular-nums">0{i + 1}</span>
                 <span>
-                  <span className={`block font-display font-medium transition-colors duration-300 ${isOpen ? 'text-gold' : 'text-ivory group-hover:text-gold-light'}`}
+                  <span className={`block font-display font-medium transition-colors duration-300 ${isOpen ? 'text-gold' : 'text-ivory group-hover:text-gold'}`}
                     style={{ fontSize: 'clamp(1.3rem, 2.6vw, 2.3rem)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
                     {xp.role}
                   </span>

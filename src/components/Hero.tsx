@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Magnetic from './Magnetic'
+//import Magnetic from './Magnetic'
 import BlobMorph from './BlobMorph'
 import { profile } from '../data/portfolio'
 

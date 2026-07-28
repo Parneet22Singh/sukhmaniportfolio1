@@ -155,11 +155,16 @@ export default function Hero({ started }: { started: boolean }) {
       {/* cut-out figure — bottom-anchored (standing) */}
       <div className="absolute inset-x-0 bottom-0 z-20 flex justify-center items-end pointer-events-none">
         <div ref={figureRef} style={{ transformOrigin: 'bottom center', marginLeft: '4%' }}>
-          <div style={{ height: 'clamp(360px, 78vh, 760px)' }} className="relative flex items-end justify-center">
+          <div
+            style={{ height: 'clamp(360px, 78vh, 760px)', aspectRatio: '1216 / 1122', maxWidth: '94vw' }}
+            className="relative"
+          >
             <img
               src="/portrait.png"
+              width={1216}
+              height={1122}
               alt={`${profile.name} — ${profile.title}`}
-              className="h-full w-auto max-w-[94vw] object-contain object-bottom"
+              className="h-full w-full object-contain object-bottom"
               style={{ filter: 'grayscale(1) contrast(1.06) drop-shadow(0 30px 60px rgba(0,0,0,0.6))' }}
               onError={(e) => {
                 if (imgOkRef.current) {

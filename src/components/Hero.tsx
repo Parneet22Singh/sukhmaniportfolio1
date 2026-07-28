@@ -11,6 +11,50 @@ gsap.registerPlugin(ScrollTrigger)
 const EASE = [0.22, 1, 0.36, 1] as const
 const NAME = 'SUKHMANI'.split('')
 
+// ── portrait lava-drip reveal ───────────────────────────────────────
+// Same drip-tongue construction as BlobMorph's curtain, scoped to the
+// image box: extends down over the top of the portrait once on load,
+// then dissolves via opacity — so the figure reads as freshly "uncovered"
+// by the same lava that drips through the rest of the hero on scroll.
+const dlerp = (a: number, b: number, t: number) => a + (b - a) * t
+const dEase = (p: number) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2)
+const dGauss = (x: number, cx: number, w: number) => Math.exp(-Math.pow((x - cx) / w, 2))
+
+function dripFill(pts: [number, number][], closeY: number) {
+  const n = pts.length
+  let d = `M ${pts[0][0].toFixed(1)},${closeY} L ${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`
+  for (let i = 0; i < n - 1; i++) {
+    const p0 = pts[i - 1] || pts[i]
+    const p1 = pts[i]
+    const p2 = pts[i + 1]
+    const p3 = pts[i + 2] || pts[i + 1]
+    const c1x = p1[0] + (p2[0] - p0[0]) / 6
+    const c1y = p1[1] + (p2[1] - p0[1]) / 6
+    const c2x = p2[0] - (p3[0] - p1[0]) / 6
+    const c2y = p2[1] - (p3[1] - p1[1]) / 6
+    d += ` C ${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`
+  }
+  d += ` L ${pts[n - 1][0].toFixed(1)},${closeY} Z`
+  return d
+}
+
+// g: 0 → 1, tongues drip further down over the portrait as g grows
+function portraitDrip(g: number) {
+  const e = dEase(g)
+  const gd = Math.pow(Math.sin(Math.min(g, 1) * Math.PI / 2), 0.7)
+  const base = dlerp(-60, 430, e)
+  const drips: [number, number][] = [[120, 260], [360, 340], [560, 220], [780, 300], [940, 200]]
+  const pts: [number, number][] = []
+  const N = 22
+  for (let i = 0; i <= N; i++) {
+    const x = -40 + (1080 / N) * i
+    let y = base + (10 + 16 * g) * Math.sin(i * 0.85)
+    for (const [cx, h] of drips) y += h * gd * dGauss(x, cx, 55)
+    pts.push([x, y])
+  }
+  return dripFill(pts, -80)
+}
+
 // A floating stat card: flies in on load, idles with a gentle float.
 function FlyCard({
   children, className = '', style, delay = 0, float = 0, started,
@@ -40,6 +84,7 @@ function FlyCard({
 export default function Hero({ started }: { started: boolean }) {
   const ref = useRef<HTMLElement>(null)
   const figureRef = useRef<HTMLDivElement>(null)
+  const dripRef = useRef<SVGPathElement>(null)
   const imgOkRef = useRef(true)
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
@@ -61,8 +106,19 @@ export default function Hero({ started }: { started: boolean }) {
         delay: 0.1,
       })
 
-      // figure rises in
-      gsap.from(figureRef.current, { yPercent: 14, opacity: 0, duration: 1.1, ease: 'power3.out', delay: 0.25 })
+      // figure rises in, with a subtle scale-settle
+      const tl = gsap.timeline({ delay: 0.25 })
+      tl.from(figureRef.current, { yPercent: 14, opacity: 0, scale: 0.95, duration: 1.1, ease: 'power3.out' })
+
+      // lava drips down over the portrait as it rises, then melts away
+      const drip = { g: 0 }
+      tl.to(drip, {
+        g: 1,
+        duration: 0.65,
+        ease: 'power2.in',
+        onUpdate: () => dripRef.current?.setAttribute('d', portraitDrip(drip.g)),
+      }, 0.1)
+      tl.to(dripRef.current, { opacity: 0, duration: 0.75, ease: 'power1.out' }, '+=0.05')
     }, ref)
 
     return () => ctx.revert()
@@ -99,7 +155,7 @@ export default function Hero({ started }: { started: boolean }) {
       {/* cut-out figure — bottom-anchored (standing) */}
       <div className="absolute inset-x-0 bottom-0 z-20 flex justify-center items-end pointer-events-none">
         <div ref={figureRef} style={{ transformOrigin: 'bottom center', marginLeft: '4%' }}>
-          <div style={{ height: 'clamp(360px, 78vh, 760px)' }} className="flex items-end justify-center">
+          <div style={{ height: 'clamp(360px, 78vh, 760px)' }} className="relative flex items-end justify-center">
             <img
               src="/portrait.png"
               alt={`${profile.name} — ${profile.title}`}
@@ -112,6 +168,22 @@ export default function Hero({ started }: { started: boolean }) {
                 }
               }}
             />
+            {/* lava drip reveal — sits over the portrait, drips down, then dissolves */}
+            <svg
+              viewBox="0 0 1000 1000"
+              preserveAspectRatio="none"
+              className="absolute inset-0 pointer-events-none"
+              aria-hidden
+            >
+              <defs>
+                <linearGradient id="heroDripGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="var(--violet)" />
+                  <stop offset="55%" stopColor="var(--coral)" />
+                  <stop offset="100%" stopColor="var(--lavender)" />
+                </linearGradient>
+              </defs>
+              <path ref={dripRef} d={portraitDrip(0)} fill="url(#heroDripGrad)" opacity={0.95} />
+            </svg>
           </div>
         </div>
       </div>

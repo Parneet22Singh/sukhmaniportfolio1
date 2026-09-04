@@ -21,7 +21,6 @@ export default function Home() {
       <Hero started={started} />
       <IntroStrip />
       <BottleneckTrack />
-      <SearchGeoSection />
       {/* audience and reach section - moved from /impact */}
       <section className="relative px-6 md:px-12 py-[14vh]">
         <div className="max-w-[1300px] mx-auto">
@@ -102,6 +101,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+            <SearchGeoSection />
      {/* the dismantling brain and the film work now have their own route,
           /media — the homepage links to it from the last card instead */}
       <ExploreCards />

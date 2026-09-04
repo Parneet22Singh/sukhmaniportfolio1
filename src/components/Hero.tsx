@@ -434,7 +434,7 @@ export default function Hero({ started }: { started: boolean }) {
               <img
                 src="/portrait.png"
                 alt={`${profile.name} - ${profile.title}`}
-                className="w-screen max-w-none max-h-[68vh] h-auto object-contain object-bottom md:w-auto md:max-w-[94vw] md:max-h-none md:h-full"
+                className="relative left-[7%] w-screen max-w-none max-h-[68vh] h-auto object-contain object-bottom md:left-0 md:w-auto md:max-w-[94vw] md:max-h-none md:h-full"
                 /* on bone the heavy black drop-shadow read as grime; a light
                    contrast lift is all the portrait needs to sit on the page */
                 style={{ filter: 'grayscale(1) contrast(1.04)' }}

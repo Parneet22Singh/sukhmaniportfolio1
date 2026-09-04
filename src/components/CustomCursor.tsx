@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 
 // Antique-gold dot (8px) that grows to 40px over interactive elements,
-// trailing the pointer with a lerp of 0.15. Desktop / fine pointers only.
+// trailing the pointer with a lerp of 0.25. Desktop / fine pointers only.
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null)
 
@@ -15,8 +15,8 @@ export default function CustomCursor() {
 
     const onMove = (e: MouseEvent) => { mx = e.clientX; my = e.clientY }
     const loop = () => {
-      x += (mx - x) * 0.15
-      y += (my - y) * 0.15
+      x += (mx - x) * 0.25
+      y += (my - y) * 0.25
       dot.style.transform = `translate(${x}px, ${y}px)`
       raf = requestAnimationFrame(loop)
     }

@@ -67,9 +67,9 @@ function ramp(stops: number[], values: number[]) {
 // inside it is front-loaded, so most of the window is the finished statement
 // simply standing still to be read (see the choreography in Beat).
 const BEATS: [number, number][] = [
-  [0.18, 0.40],
-  [0.47, 0.69],
-  [0.76, 1.0],
+  [0.18, 0.42],
+  [0.50, 0.72],
+  [0.80, 1.0],
 ]
 
 // The melt holds off until the closing beat is fully typed AND has had a long,
@@ -146,11 +146,11 @@ function Beat({
   const span = to - from
   const ruleIn: [number, number] = [from, from + span * 0.05]
   const kickIn: [number, number] = [from + span * 0.03, from + span * 0.1]
-  const typeIn: [number, number] = [from + span * 0.08, from + span * 0.26]
-  const subIn: [number, number] = [from + span * 0.24, from + span * 0.32]
-  const eraseFrom = from + span * 0.9
-  const eraseTo = from + span * 0.96
-  const fadeOut: [number, number] = [from + span * 0.93, from + span * 0.99]
+  const typeIn: [number, number] = [from + span * 0.08, from + span * 0.28]
+  const subIn: [number, number] = [from + span * 0.28, from + span * 0.42]
+  const eraseFrom = from + span * 0.85
+  const eraseTo = from + span * 0.94
+  const fadeOut: [number, number] = [from + span * 0.85, from + span * 0.96]
 
   const scaleX = useTransform(p, ramp([ruleIn[0], ruleIn[1]], [0, 1]))
   const chromeOut = useTransform(p, ramp([fadeOut[0], fadeOut[1]], [1, 0]))
@@ -177,7 +177,7 @@ function Beat({
           />
 
           <motion.p
-            className="font-mono text-[9px] md:text-[10px] uppercase text-ink/50 mb-7"
+            className="font-mono text-[9px] md:text-[10px] uppercase text-ink/70 mb-7"
             style={{ letterSpacing: '0.26em', opacity: kickOpacity, x: kickX }}
           >
             <span className="tabular-nums">0{index + 1}</span>
@@ -207,7 +207,7 @@ function Beat({
           </h2>
 
           <motion.p
-            className="mt-8 max-w-[400px] text-ink/60 text-sm leading-relaxed"
+            className="mt-8 max-w-[400px] text-ink/75 text-sm leading-relaxed"
             style={{ opacity: subOpacity, y: subY }}
           >
             {sub}
